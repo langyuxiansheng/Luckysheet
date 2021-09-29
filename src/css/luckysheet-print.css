@@ -58,8 +58,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 800px;
-    height: 1100px;
+    /* width: 800px; */
+    /* height: 1100px; */
     border-right: 1px dashed #f00;
     border-bottom: 1px dashed #f00;
     z-index: 2;

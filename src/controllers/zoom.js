@@ -217,7 +217,14 @@ function zoomSlierDomBind(ratio){
 export function zoomNumberDomBind(ratio){
     let r = Math.round(ratio*100) + "%";
     console.log('current-ratio', ratio)
-    $("#luckysheet-zoom-ratioText").html(r).data('current-ratio', ratio);;
+    $("#luckysheet-zoom-ratioText").html(r).data('current-ratio', ratio);
+    const $print = $('#luckysheet-print-area');
+    //同步打印区域的大小
+    $print.css({
+        width: $print.width() * ratio + 'px',
+        height: $print.height() * ratio + 'px'
+    })
+
     zoomSlierDomBind(ratio);
 }
 
