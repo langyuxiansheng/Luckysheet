@@ -6760,12 +6760,13 @@ export function setPrintArea (type, direction, margins) {
 
     //标准的纸张才允许使用
     if (paper.includes(type)) {
-        const attr = getPaperSize(type, direction, margins);
-        const zoom = $('#luckysheet-zoom-ratioText').data('current-ratio')
+        const attr = getPaperSize(type, direction, margins,css);
+        const zoom = $('#luckysheet-zoom-ratioText').data('current-ratio');
         $('#luckysheet-print-area').css({
             display:'block',
             width: attr.width * zoom + 'px',
-            height: attr.height * zoom + 'px'
+            height: attr.height * zoom + 'px',
+            ...css
         })
         attr.zoom = zoom;
         // console.log(`标准的纸张才允许使用`, attr,zoom)
