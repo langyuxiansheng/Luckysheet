@@ -6750,8 +6750,9 @@ export function checkTheStatusOfTheSelectedCells (type, status) {
  * @param {*} type 纸张类型
  * @param {*} direction 纸张方向
  * @param {*} pad 页边距
+ * @param {*} css 样式
  */
-export function setPrintArea (type, direction, margins) {
+export function setPrintArea (type, direction, margins, css) {
     let paper = [];
     for (let i = 1; i <= 6; i++) {
         paper.push('A' + i);
