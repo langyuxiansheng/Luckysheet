@@ -6248,7 +6248,8 @@ export function insertImage (src, options = {}) {
                 left: left,
                 top: top,
                 originWidth: width,
-                originHeight: height
+                originHeight: height,
+                options
             }
 
             imageCtrl.addImgItem(img);
@@ -6344,7 +6345,8 @@ export function insertImage (src, options = {}) {
                 left: left,
                 top: top,
                 originWidth: image.width,
-                originHeight: image.height
+                originHeight: image.height,
+                options
             }
 
             let width, height;
@@ -6369,6 +6371,8 @@ export function insertImage (src, options = {}) {
             imgItem.default.top = img.top;
             imgItem.crop.width = width;
             imgItem.crop.height = height;
+            imgItem.options = img.options;
+            
 
             let id = imageCtrl.generateRandomId();
             images[id] = imgItem;
@@ -6379,7 +6383,6 @@ export function insertImage (src, options = {}) {
                 success();
             }
         }
-        image.options = options;
         image.src = src;
     }
 }
