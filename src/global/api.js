@@ -6776,6 +6776,7 @@ export function setPrintArea (type, direction, margins, css) {
         }
         
         attr.zoom = zoom;
+        Store.paperAttr = attr;
         // console.log(`标准的纸张才允许使用`, attr,zoom)
         return attr;
     } else {

@@ -7,6 +7,7 @@ import { jfrefreshgrid_rhcw } from '../global/refresh';
 import server from './server';
 import luckysheetPostil from './postil';
 import imageCtrl from './imageCtrl';
+import { getPaperSize } from './print-area';
 
 
 
@@ -216,15 +217,16 @@ function zoomSlierDomBind(ratio){
 
 export function zoomNumberDomBind(ratio){
     let r = Math.round(ratio*100) + "%";
-    console.log('current-ratio', ratio)
     $("#luckysheet-zoom-ratioText").html(r).data('current-ratio', ratio);
+    const attr = Store.paperAttr;
     const $print = $('#luckysheet-print-area');
-    //同步打印区域的大小
-    $print.css({
-        width: $print.width() * ratio + 'px',
-        height: $print.height() * ratio + 'px'
-    })
-
+    if(attr){
+        //同步打印区域的大小
+        $print.css({
+            width: attr.width * ratio + 'px',
+            height:  attr.height * ratio + 'px'
+        })
+    }
     zoomSlierDomBind(ratio);
 }
 
