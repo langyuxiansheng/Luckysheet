@@ -6369,6 +6369,7 @@ export function insertImage (src, options = {}) {
             imgItem.default.top = img.top;
             imgItem.crop.width = width;
             imgItem.crop.height = height;
+            imgItem.options = options;
 
             let id = imageCtrl.generateRandomId();
             images[id] = imgItem;
