@@ -9969,6 +9969,7 @@ export default {
         selectCellRange      : '點擊選擇儲存格範圍',
         selectCellRange2     : '請選擇儲存格範圍',
         verificationCondition: '驗證條件',
+        allowMultiSelect     : "是否允許多選",
         dropdown             : '下拉清單',
         checkbox             : '核取方塊',
         number               : '數位',
@@ -10012,6 +10013,7 @@ export default {
         tooltipInfo5         : '文字內容不能為空',
         tooltipInfo6         : '輸入的值不是日期類型',
         tooltipInfo7         : '日期2不能小於日期1',
+        textlengthInteger    : '文字長度必須是大於等於0的整數',
     },
     formula: {
         sum       : "求和",

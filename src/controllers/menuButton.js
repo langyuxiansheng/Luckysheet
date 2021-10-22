@@ -32,7 +32,7 @@ import { countfunc } from '../global/count';
 import { hideMenuByCancel } from '../global/cursorPos';
 import { getSheetIndex, getRangetxt, getluckysheetfile } from '../methods/get';
 import { setluckysheetfile } from '../methods/set';
-import {isInlineStringCell,updateInlineStringFormat,convertCssToStyleList,inlineStyleAffectAttribute,updateInlineStringFormatOutside} from './inlineString';
+import {isInlineStringCell,isInlineStringCT,updateInlineStringFormat,convertCssToStyleList,inlineStyleAffectAttribute,updateInlineStringFormatOutside} from './inlineString';
 import { replaceHtml, getObjType, rgbTohex, mouseclickposition, luckysheetfontformat,luckysheetContainerFocus } from '../utils/util';
 import {openProtectionModal,checkProtectionFormatCells,checkProtectionNotEnable} from './protection';
 import Store from '../store';
@@ -275,8 +275,8 @@ const menuButton = {
 
                 return;
             }
-
-            let prefix = "", main = "";
+            //Uncaught ReferenceError: Cannot access 'fa' before initialization
+            let prefix = "", main = "", fa = [];
             if(foucsStatus.fa.indexOf(".")>-1){
                 fa = foucsStatus.fa.split(".");
                 prefix = fa[0];
@@ -286,7 +286,7 @@ const menuButton = {
                 return;
             }
 
-            let fa = main.split("");
+            fa = main.split("");
             let tail = "";
             for(let i = fa.length-1; i >= 0; i--){
                 let c = fa[i];
@@ -358,7 +358,9 @@ const menuButton = {
                 return;
             }
 
-            let prefix = "", main = "";
+            //Uncaught ReferenceError: Cannot access 'fa' before initialization
+            let prefix = "", main = "", fa = [];
+            
             if(foucsStatus.fa.indexOf(".")>-1){
                 fa = foucsStatus.fa.split(".");
                 prefix = fa[0];
@@ -368,7 +370,7 @@ const menuButton = {
                 main = foucsStatus.fa;
             }
 
-            let fa = main.split("");
+            fa = main.split("");
             let tail = "";
             for(let i = fa.length - 1; i >= 0; i--){
                 let c = fa[i];
@@ -3267,7 +3269,7 @@ const menuButton = {
                             for(let c = c1; c <= c2; c++){
                                 let cell = d[r][c];
 
-                                if(cell != null && (!isRealNull(cell.v) || cell.f != null) && !isfirst){
+                                if(cell != null && (isInlineStringCT(cell.ct) || !isRealNull(cell.v) || cell.f != null) && !isfirst){
                                     fv = $.extend(true, {}, cell);
                                     isfirst = true;
                                 }
