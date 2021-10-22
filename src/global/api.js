@@ -6207,7 +6207,6 @@ export function insertImage (src, options = {}) {
     if (file == null) {
         return tooltip.info("The order parameter is invalid.", "");
     }
-    console.log(file,Store.currentSheetIndex,options)
 
     if (file.index == Store.currentSheetIndex) {
         let last = Store.luckysheet_select_save[Store.luckysheet_select_save.length - 1];
@@ -6241,8 +6240,8 @@ export function insertImage (src, options = {}) {
 
         let image = new Image();
         image.onload = function () {
-            let width = image.width,
-                height = image.height;
+            let width = options.width || image.width,
+                height = options.height || image.height;
 
             let img = {
                 src: src,
