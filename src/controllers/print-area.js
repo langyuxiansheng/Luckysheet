@@ -17,7 +17,7 @@ export function getOneMmsPx () {
  * @returns 
  */
 export function getPaperSize (type, direction, margins = {}) {
-    const mspx = getOneMmsPx ();
+    const mspx = getOneMmsPx();
     const paper = {
         'B5': {
             w: 130,
@@ -87,20 +87,20 @@ export function getPaperSize (type, direction, margins = {}) {
     const { left, top, right, bottom } = margins;
     if (left) {
         obj.left = left * mspx;
-        obj.width =  obj.width - obj.left;
+        obj.width = obj.width - obj.left + 74;
     };
-    if (right){
+    if (right) {
         obj.right = right * mspx;
-        obj.width =  obj.width - obj.right;
+        obj.width = obj.width - obj.right + 74;
     }
     if (top) {
         obj.top = top * mspx;
-        obj.height = obj.height - obj.top;
+        obj.height = obj.height - obj.top - 90;
     }
- 
+
     if (bottom) {
         obj.bottom = bottom * mspx;
-        obj.height = obj.height - obj.bottom;
+        obj.height = obj.height - obj.bottom - 90;
     }
     return obj
 }
