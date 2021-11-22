@@ -77,30 +77,30 @@ export function getPaperSize (type, direction, margins = {}) {
     };
     //横向
     if (direction == 1) {
-        obj.width = paper[type].h * mspx;
-        obj.height = paper[type].w * mspx;
+        obj.width = paper[type].h * mspx + 70;
+        obj.height = paper[type].w * mspx - 94;
     } else {
-        obj.width = paper[type].w * mspx;
-        obj.height = paper[type].h * mspx;
+        obj.width = paper[type].w * mspx + 70;
+        obj.height = paper[type].h * mspx - 94;
     }
 
     const { left, top, right, bottom } = margins;
     if (left) {
         obj.left = left * mspx;
-        obj.width = obj.width - obj.left;
+        obj.width = obj.width + obj.left;
     };
     if (right) {
         obj.right = right * mspx;
-        obj.width = obj.width - obj.right;
+        obj.width = obj.width + obj.right;
     }
     if (top) {
         obj.top = top * mspx;
-        obj.height = obj.height - obj.top;
+        obj.height = obj.height + obj.top;
     }
 
     if (bottom) {
         obj.bottom = bottom * mspx;
-        obj.height = obj.height - obj.bottom;
+        obj.height = obj.height + obj.bottom;
     }
     return obj
 }
