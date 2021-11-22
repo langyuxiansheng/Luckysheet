@@ -87,20 +87,20 @@ export function getPaperSize (type, direction, margins = {}) {
     const { left, top, right, bottom } = margins;
     if (left) {
         obj.left = left * mspx;
-        obj.width = obj.width - obj.left + 74;
+        obj.width = obj.width - obj.left;
     };
     if (right) {
         obj.right = right * mspx;
-        obj.width = obj.width - obj.right + 74;
+        obj.width = obj.width - obj.right;
     }
     if (top) {
         obj.top = top * mspx;
-        obj.height = obj.height - obj.top - 90;
+        obj.height = obj.height - obj.top;
     }
 
     if (bottom) {
         obj.bottom = bottom * mspx;
-        obj.height = obj.height - obj.bottom - 90;
+        obj.height = obj.height - obj.bottom;
     }
     return obj
 }
