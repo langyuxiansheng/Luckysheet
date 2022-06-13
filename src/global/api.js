@@ -1083,7 +1083,62 @@ export function insertRowOrColumn (type, index = 0, options = {}) {
         success();
     }
 }
+/**
+ * 在第index行或列的位置，插入number行或列
+ * @param {String} type 插入行或列 row-行  column-列
+ * @param {Number} index 在第几行插入空白行，从0开始
+ * @param {Object} options 可选参数
+ * @param {Number} options.number 插入的空白行数；默认为 1
+ * @param {Number} options.order 工作表索引；默认值为当前工作表索引
+ * @param {Function} options.success 操作结束的回调函数
+ */
+export function insertRowBottomOrColumnRight (type, index = 0, options = {}) {
+    if (!isRealNum(index)) {
+        return tooltip.info('The index parameter is invalid.', '');
+    }
 
+    let curSheetOrder = getSheetIndex(Store.currentSheetIndex);
+    let {
+        number = 1,
+        order = curSheetOrder,
+        success
+    } = { ...options }
+
+    let _locale = locale();
+    let locale_info = _locale.info;
+    if (!isRealNum(number)) {
+        if (isEditMode()) {
+            alert(locale_info.tipInputNumber);
+        } else {
+            tooltip.info(locale_info.tipInputNumber, "");
+        }
+        return;
+    }
+
+    number = parseInt(number);
+    if (number < 1 || number > 100) {
+        if (isEditMode()) {
+            alert(locale_info.tipInputNumberLimit);
+        } else {
+            tooltip.info(locale_info.tipInputNumberLimit, "");
+        }
+        return;
+    }
+
+    // 默认在行上方增加行，列左侧增加列
+    let sheetIndex;
+    if (order) {
+        if (Store.luckysheetfile[order]) {
+            sheetIndex = Store.luckysheetfile[order].index;
+        }
+    }
+
+    luckysheetextendtable(type, index, number, "rightbottom", sheetIndex);
+
+    if (success && typeof success === 'function') {
+        success();
+    }
+}
 /**
  * 在第row行的位置，插入number行空白行
  * @param {Number} row 在第几行插入空白行，从0开始
@@ -1095,7 +1150,17 @@ export function insertRowOrColumn (type, index = 0, options = {}) {
 export function insertRow (row = 0, options = {}) {
     insertRowOrColumn('row', row, options)
 }
-
+/**
+ * 在第row行的位置，插入number行空白行
+ * @param {Number} row 在第几行插入空白行，从0开始
+ * @param {Object} options 可选参数
+ * @param {Number} options.number 插入的空白行数；默认为 1
+ * @param {Number} options.order 工作表索引；默认值为当前工作表索引
+ * @param {Function} options.success 操作结束的回调函数
+ */
+export function insertRowBottom (row = 0, options = {}) {
+    insertRowBottomOrColumnRight('row', row, options)
+}
 /**
  * 在第column列的位置，插入number列空白列
  * @param {Number} column 在第几列插入空白列，从0开始
@@ -1107,7 +1172,17 @@ export function insertRow (row = 0, options = {}) {
 export function insertColumn (column = 0, options = {}) {
     insertRowOrColumn('column', column, options)
 }
-
+/**
+ * 在第column列的位置，插入number列空白列
+ * @param {Number} column 在第几列插入空白列，从0开始
+ * @param {Object} options 可选参数
+ * @param {Number} options.number 插入的空白列数；默认为 1
+ * @param {Number} options.order 工作表索引；默认值为当前工作表索引
+ * @param {Function} options.success 操作结束的回调函数
+ */
+export function insertColumnRight (column = 0, options = {}) {
+    insertRowBottomOrColumnRight('column', column, options)
+}
 /**
  * 删除指定的行或列。删除行列之后，行列的序号并不会变化，下面的行（右侧的列）会补充到上（左）面，注意观察数据是否被正确删除即可。
  * @param {String} type 删除行或列 row-行  column-列
@@ -1183,6 +1258,7 @@ export function hideRowOrColumn (type, startIndex, endIndex, options = {}) {
     let curSheetOrder = getSheetIndex(Store.currentSheetIndex);
     let {
         order = curSheetOrder,
+        saveParam = true,
         success
     } = { ...options }
 
@@ -1210,7 +1286,10 @@ export function hideRowOrColumn (type, startIndex, endIndex, options = {}) {
     }
 
     Store.luckysheetfile[order].config = cfg;
-    server.saveParam("cg", file.index, cfg[cfgKey], { "k": cfgKey });
+
+    if (saveParam) {
+        server.saveParam("cg", file.index, cfg[cfgKey], { "k": cfgKey });
+    }
 
     // 若操作sheet为当前sheet页，行高、列宽 刷新
     if (order == curSheetOrder) {
@@ -1241,6 +1320,7 @@ export function showRowOrColumn (type, startIndex, endIndex, options = {}) {
     let curSheetOrder = getSheetIndex(Store.currentSheetIndex);
     let {
         order = curSheetOrder,
+        saveParam = true,
         success
     } = { ...options }
 
@@ -1270,7 +1350,9 @@ export function showRowOrColumn (type, startIndex, endIndex, options = {}) {
     //config
     Store.luckysheetfile[order].config = Store.config;
 
-    server.saveParam("cg", file.index, cfg[cfgKey], { "k": cfgKey });
+    if (saveParam) {
+        server.saveParam("cg", file.index, cfg[cfgKey], { "k": cfgKey });
+    }
 
     // 若操作sheet为当前sheet页，行高、列宽 刷新
     if (order === curSheetOrder) {
@@ -1333,7 +1415,7 @@ export function showColumn (startIndex, endIndex, options = {}) {
 
 
 /**
- * 设置指定行的高度
+ * 设置指定行的高度。优先级最高，高于默认行高和用户自定义行高。
  * @param {Object} rowInfo 行数和高度对应关系
  * @param {Object} options 可选参数
  * @param {Number} options.order 工作表索引；默认值为当前工作表索引
@@ -1364,8 +1446,12 @@ export function setRowHeight (rowInfo, options = {}) {
         if (parseInt(r) >= 0) {
             let len = rowInfo[r];
 
-            if (Number(len) >= 0) {
-                cfg['rowlen'][parseInt(r)] = Number(len);
+            if (len === 'auto') {
+                cfg['rowlen'][parseInt(r)] = len
+            } else {
+                if (Number(len) >= 0) {
+                    cfg['rowlen'][parseInt(r)] = Number(len);
+                }
             }
         }
     }
@@ -1417,8 +1503,12 @@ export function setColumnWidth (columnInfo, options = {}) {
         if (parseInt(c) >= 0) {
             let len = columnInfo[c];
 
-            if (Number(len) >= 0) {
-                cfg['columnlen'][parseInt(c)] = Number(len);
+            if (len === 'auto') {
+                cfg['columnlen'][parseInt(c)] = len
+            } else {
+                if (Number(len) >= 0) {
+                    cfg['columnlen'][parseInt(c)] = Number(len);
+                }
             }
         }
     }
@@ -2857,15 +2947,15 @@ export function setRangeFormat (attr, value, options = {}) {
         result.push(setSingleRangeFormat(attr, value, { range: range[i], order: order }));
     }
 
+    let fileData = $.extend(true, [], file.data);
     if (result.some(i => i === 'error')) {
         file.data.length = 0;
-        file.data.push(...sheetData);
+        file.data.push(...fileData);
         return false;
     }
 
-    let fileData = $.extend(true, [], file.data);
     file.data.length = 0;
-    file.data.push(...sheetData);
+    file.data.push(...fileData);
 
     if (file.index == Store.currentSheetIndex) {
         jfrefreshgrid(fileData, undefined, undefined, true, false);
@@ -6240,15 +6330,16 @@ export function insertImage (src, options = {}) {
 
         let image = new Image();
         image.onload = function () {
-            let width = image.width,
-                height = image.height;
+            let width = options.width || image.width,
+                height = options.height || image.height;
 
             let img = {
                 src: src,
                 left: left,
                 top: top,
                 originWidth: width,
-                originHeight: height
+                originHeight: height,
+                options
             }
 
             imageCtrl.addImgItem(img);
@@ -6344,7 +6435,8 @@ export function insertImage (src, options = {}) {
                 left: left,
                 top: top,
                 originWidth: image.width,
-                originHeight: image.height
+                originHeight: image.height,
+                options
             }
 
             let width, height;
@@ -6369,6 +6461,8 @@ export function insertImage (src, options = {}) {
             imgItem.default.top = img.top;
             imgItem.crop.width = width;
             imgItem.crop.height = height;
+            imgItem.options = img.options;
+
 
             let id = imageCtrl.generateRandomId();
             images[id] = imgItem;
@@ -6750,8 +6844,9 @@ export function checkTheStatusOfTheSelectedCells (type, status) {
  * @param {*} type 纸张类型
  * @param {*} direction 纸张方向
  * @param {*} pad 页边距
+ * @param {*} css 样式
  */
-export function setPrintArea (type, direction, margins) {
+export function setPrintArea (type, direction, margins, css) {
     let paper = [];
     for (let i = 1; i <= 6; i++) {
         paper.push('A' + i);
@@ -6760,13 +6855,24 @@ export function setPrintArea (type, direction, margins) {
 
     //标准的纸张才允许使用
     if (paper.includes(type)) {
-        const attr = getPaperSize(type, direction, margins);
-        $('#luckysheet-print-area').css({
-            width: attr.width + 'px',
-            height: attr.height + 'px'
-        })
+        const attr = getPaperSize(type, direction, margins, css);
+        const zoom = $('#luckysheet-zoom-ratioText').data('current-ratio');
+        const $print = $('#luckysheet-print-area');
+        $print.css({
+            display: 'block',
+            width: attr.width * zoom + 'px',
+            height: attr.height * zoom + 'px',
+            ...css
+        });
+
+        if (!$print.hasClass('luckysheet-print-area-noprint')) {
+            $print.addClass('luckysheet-print-area-noprint')
+        }
+
+        attr.zoom = zoom;
+        Store.paperAttr = attr;
+        // console.log(`标准的纸张才允许使用`, attr,zoom)
         return attr;
-        console.log(`标准的纸张才允许使用`, attr)
     } else {
         throw new Error('纸张类型错误')
     }

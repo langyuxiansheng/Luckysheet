@@ -653,6 +653,8 @@ const imageCtrl = {
         imgItem.default.top = img.top;
         imgItem.crop.width = width;
         imgItem.crop.height = height;
+        imgItem.options = img.options;
+        
 
         let scrollTop = $("#luckysheet-cell-main").scrollTop(), 
             scrollLeft = $("#luckysheet-cell-main").scrollLeft();
