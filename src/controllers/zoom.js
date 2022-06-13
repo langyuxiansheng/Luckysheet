@@ -162,7 +162,8 @@ export function zoomInitial(){
             // Store.zoomRatio = currentRatio;
             zoomChange(currentRatio);
             let r = Math.round(currentRatio*100) + "%";
-            $("#luckysheet-zoom-ratioText").html(r);
+            console.log('current-ratio', currentRatio)
+            $("#luckysheet-zoom-ratioText").html(r).data('current-ratio', currentRatio);
             $("#luckysheet-zoom-cursor").css("left", pos-4);
         });
 
@@ -215,7 +216,8 @@ function zoomSlierDomBind(ratio){
 
 export function zoomNumberDomBind(ratio){
     let r = Math.round(ratio*100) + "%";
-    $("#luckysheet-zoom-ratioText").html(r);
+    console.log('current-ratio', ratio)
+    $("#luckysheet-zoom-ratioText").html(r).data('current-ratio', ratio);;
     zoomSlierDomBind(ratio);
 }
 
